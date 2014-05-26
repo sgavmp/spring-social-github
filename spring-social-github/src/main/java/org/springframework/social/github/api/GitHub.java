@@ -58,5 +58,8 @@ public interface GitHub extends ApiBinding {
 	 * The RestOperations object returned is configured to include an OAuth "Authorization" header on all requests.
 	 */
 	RestOperations restOperations();
+	
+	
+	StatsOperations statsOperations();
 
 }

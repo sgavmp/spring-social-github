@@ -18,6 +18,7 @@ package org.springframework.social.github.api.impl;
 import org.springframework.social.github.api.GistOperations;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.RepoOperations;
+import org.springframework.social.github.api.StatsOperations;
 import org.springframework.social.github.api.UserOperations;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.oauth2.OAuth2Version;
@@ -34,6 +35,7 @@ public class GitHubTemplate extends AbstractOAuth2ApiBinding implements GitHub {
 	private GistOperations gistOperations;
 	private RepoOperations repoOperations;
 	private UserOperations userOperations;
+	private StatsTemplate statsOperations;
 	
 	/**
 	 * No-arg constructor to support cases in which you want to call the GitHub
@@ -75,6 +77,10 @@ public class GitHubTemplate extends AbstractOAuth2ApiBinding implements GitHub {
 	public UserOperations userOperations() { 
 		return userOperations; 
 	}
+
+	public StatsOperations statsOperations() {
+		return statsOperations;
+	}
 	
 	public RestOperations restOperations() {
 		return getRestTemplate();
@@ -86,6 +92,7 @@ public class GitHubTemplate extends AbstractOAuth2ApiBinding implements GitHub {
 		this.gistOperations = new GistTemplate(getRestTemplate(), isAuthorized());
 		this.repoOperations = new RepoTemplate(getRestTemplate(), isAuthorized());
 		this.userOperations = new UserTemplate(getRestTemplate(), isAuthorized());
+		this.statsOperations = new StatsTemplate(getRestTemplate(), isAuthorized());
 	}
 
 }
