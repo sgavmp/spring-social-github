@@ -13,6 +13,7 @@ configure(allprojects) {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
     apply plugin: 'javadocHotfix'
+    apply plugin: 'maven-publish'
 
     group = 'org.springframework.social'
 
@@ -37,6 +38,20 @@ configure(allprojects) {
     repositories {
         maven { url "http://repo.spring.io/libs-snapshot" }
         maven { url "http://repo.spring.io/ebr-maven-external" }
+    }
+    
+    publishing {
+         publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    // telling gradle to publish artifact to local directory (3)
+    repositories {
+        maven {
+            url "file:C:/Users/Sergio/repository/mavenrepo/snapshots"
+        }
+      }
     }
 
     dependencies {
