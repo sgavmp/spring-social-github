@@ -17,6 +17,7 @@ package org.springframework.social.github.api.impl;
 
 import static java.util.Arrays.asList;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.social.github.api.GitHubCommit;
@@ -30,6 +31,14 @@ import org.springframework.social.github.api.GitHubUser;
 import org.springframework.social.github.api.RepoOperations;
 import org.springframework.social.github.api.StatsOperations;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 /**
  * <p>
@@ -53,7 +62,21 @@ public class StatsTemplate extends AbstractGitHubOperations implements StatsOper
 
 	public List<GitHubStatsCommitActivity> getCommitActivity(String user,
 			String repo) {
-		return asList(restTemplate.getForObject(buildRepoUri("/commit_activity"), GitHubStatsCommitActivity[].class, user, repo));
+		String jsonString = restTemplate.getForObject(buildRepoUri("/commit_activity"), String.class, user, repo);
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+		try {
+			return mapper.readValue(jsonString, new TypeReference<List<GitHubStatsCommitActivity>>() {
+			});
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//Nunca llega aquí
+		return null;
 	}
 
 	public GitHubStatsParticipation getParticipation(String user,
